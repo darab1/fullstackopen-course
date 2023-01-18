@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
 
-function App() {
+const Button = (props) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <button onClick={props.handleClick}>
+      {props.text}
+    </button>
+  )
+}
+
+const App = () => {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  function handleClick(feedback) {
+    if (feedback === 'good') {
+      setGood(prevFeed => prevFeed + 1);
+    } else if (feedback === 'neutral') {
+      setNeutral(prevFeed => prevFeed + 1);
+    } else {
+      setBad(prevFeed => prevFeed + 1);
+    }
+  }
+
+  return (
+    <div>
+      <h2>give feedback</h2>
+      <Button
+        text={'good'}
+        handleClick={() => handleClick('good')}
+      />
+      <Button
+        text={'neutral'}
+        handleClick={() => handleClick('neutral')}
+      />
+      <Button
+        text={'bad'}
+        handleClick={() => handleClick('bad')}
+      />
+      <h2>statistics</h2>
+      <p>good {good}</p>
+      <p>neutral {neutral}</p>
+      <p>bad {bad}</p>
     </div>
-  );
+  )
 }
 
 export default App;
