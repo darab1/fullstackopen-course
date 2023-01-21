@@ -1,6 +1,7 @@
 const Total = (props) => {
-  let total = 0;
-  props.parts.map(part => total += part.exercises);
+  const initialValue = 0;
+  const total = props.parts.reduce((accumulator, curValue) =>
+    accumulator + curValue.exercises, initialValue);
 
   return (
     <p><strong>Total of {total} exercises.</strong></p>
