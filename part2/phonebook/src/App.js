@@ -22,8 +22,8 @@ const App = () => {
 
   function addNewPerson(event) {
     event.preventDefault()
-    const names = persons.map(person => person.name)
-    const alreadyAdded = names.includes(newName)
+    const names = persons.map(person => person.name.toLowerCase())
+    const alreadyAdded = names.includes(newName.toLowerCase())
 
     if (alreadyAdded) {
       alert(`${newName} is already added to phonebook`)
@@ -36,9 +36,13 @@ const App = () => {
       id: newName.length + 1
     }
 
-    setPersons(persons.concat(newPersonObj))
-    setNewName('')
-    setNewNumber('')
+    axios
+      .post('http://localhost:3001/persons', newPersonObj)
+      .then(res => {
+        setPersons(persons.concat(res.data))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   function handleNameChange(event) {
