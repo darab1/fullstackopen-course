@@ -4,12 +4,17 @@ import personService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState({
+    type: null,
+    text: ''
+  })
 
   useEffect(() => {
     personService
@@ -17,8 +22,9 @@ const App = () => {
       .then(initialPersons => {
         setPersons(initialPersons)
       })
-  }, [])
+  }, [persons])
 
+  // Add a new person to the phonebook
   function addNewPerson(event) {
     event.preventDefault()
     const names = persons.map(person => person.name.toLowerCase())
@@ -41,14 +47,20 @@ const App = () => {
     personService
       .createNewPerson(newPersonObj)
       .then(returnedPerson => {
+        setNotificationMsg({
+          type: 'success',
+          text: `Added ${newPersonObj.name}`
+        })
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
       })
   }
 
+  // Update a person's number
   function updatePerson(id) {
     const personToUpdate = persons.find(p => p.id === id)
+    console.log('personToUpdate', personToUpdate)
     const updatedPerson = {
       ...personToUpdate,
       number: newNumber
@@ -58,15 +70,21 @@ const App = () => {
       .updatePerson(id, updatedPerson)
       .then(returnedPerson => {
         setPersons(prevPersons => {
-          return prevPersons.map(p => {
-            return p.id === id
+          setNotificationMsg({
+            type: 'success',
+            text: `Changed ${updatedPerson.name}'s number`
+          })
+          const updatedPersons = prevPersons.map(p => 
+              p.id === id
               ? { ...p, number: returnedPerson.number }
               : p
-          })
+          )
+          return updatedPersons
         })
       })
   }
 
+  // Remove a person from the phonebook
   function removePerson(id) {
     const personToRemove = persons.find(p => p.id === id)
 
@@ -74,9 +92,28 @@ const App = () => {
       personService
         .deletePerson(id)
         .then(() => {
+          setNotificationMsg({
+            type: 'success',
+            text: `Successfully removed ${personToRemove.name} from the database`
+          })
           setPersons(persons.filter(p => p.id !== id))
         })
     }
+  }
+
+  // Change the message state
+  function setNotificationMsg(msgObj) {
+    setMessage({
+      type: msgObj.type,
+      text: msgObj.text
+    })
+    
+    setTimeout(() => {
+      setMessage({
+        type: null,
+        text: ''
+      })
+    }, 5000)
   }
 
   function handleNameChange(event) {
@@ -97,6 +134,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter
         filter={filter}
         handleFilterChange={handleFilterChange}
