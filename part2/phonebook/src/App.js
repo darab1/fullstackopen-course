@@ -22,7 +22,7 @@ const App = () => {
       .then(initialPersons => {
         setPersons(initialPersons)
       })
-  }, [persons])
+  }, [])
 
   // Add a new person to the phonebook
   function addNewPerson(event) {
