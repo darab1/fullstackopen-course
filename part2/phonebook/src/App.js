@@ -55,6 +55,14 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+      .catch(err => {
+        console.log('error obj: ', err.response.data)
+
+        setNotificationMsg({
+          type: 'error',
+          text: `Name needs to be at least 3 characters long`
+        })
+      })
   }
 
   // Update a person's number
@@ -128,8 +136,9 @@ const App = () => {
     setFilter(event.target.value)
   }
 
-  const filteredPersons = persons.filter(person =>
-    person.name.toLowerCase().includes(filter.toLowerCase()))
+  const filteredPersons = persons.filter(person => {
+    return person.name.toLowerCase().includes(filter.toLowerCase())
+  })
 
   return (
     <div>

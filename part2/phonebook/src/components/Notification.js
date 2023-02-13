@@ -12,6 +12,16 @@ const Notification = (props) => {
       padding: '10px',
       marginBottom: '10px'
     }
+  } else if (props.message.type === 'error') {
+    styles = {
+      color: 'red',
+      background: 'lightgrey',
+      fontSize: '20px',
+      borderStyle: 'solid',
+      borderRadius: '5px',
+      padding: '10px',
+      marginBottom: '10px'
+    }
   }
 
   return (
